@@ -34,7 +34,6 @@ mysql:
   volumes:
     - ./storage/mysql/data:/var/lib/mysql
     - ./storage/dumps:/var/dumps
-    - ./bd:/opt
 
 redis:
   image: redis
