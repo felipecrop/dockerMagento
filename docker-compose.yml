@@ -1,0 +1,83 @@
+backend:
+  build: .
+  dockerfile: builders/Nginx
+  container_name: backend
+  ports:
+    - "80:80"
+    - "443:443"
+  links:
+    - mysql:mysql
+    - redis:redis
+#    - gearman:gearman
+#    - solr:solr
+#    - mongo:mongo
+#    - memcached:memcached
+#    - elasticsearch:elasticsearch
+#    - rabbitmq:rabbitmq
+  environment:
+    XDEBUG_CONFIG: remote_host=172.17.0.1
+  volumes:
+    - ./www:/var/www
+    - ./conf/nginx/sites:/etc/nginx/conf.d
+    - ./storage/logs/supervisor:/var/log/supervisor
+    - ./storage/logs/nginx:/var/log/nginx
+    - ./bd:/opt
+    - ./bin:/usr/local/bin
+
+mysql:
+  image: mysql
+  container_name: mysql
+  ports:
+    - "3306:3306"
+  environment:
+    MYSQL_ROOT_PASSWORD: root
+  volumes:
+    - ./storage/mysql/data:/var/lib/mysql
+    - ./storage/dumps:/var/dumps
+    - ./bd:/opt
+
+redis:
+  image: redis
+  container_name: redis
+  ports:
+    - "6379:6379"
+
+    
+#gearman:
+#  build: .
+#  dockerfile: builders/Gearman
+#  container_name: gearman
+#  ports:
+#     - "4730:4730"
+
+#solr:
+#  image: solr
+#  container_name: solr
+#  ports:
+#    - "27017:27017"
+
+#mongo:
+#  image: mongo
+#  container_name: mongo
+#  ports:
+#    - "27017:27017"
+
+#memcached:
+#  image: memcached
+#  container_name: memcached
+#  ports:
+#    - "11211:11211"
+
+#elasticsearch:
+#  image: elasticsearch
+#  container_name: elasticsearch
+#  ports:
+#    - "9200:9200"
+#    - "9300:9300"
+
+#rabbitmq:
+#  image: rabbitmq:3.6.1-management
+#  container_name: rabbitmq
+#  ports:
+#    - "15672:15672"
+#    - "5672:5672"
